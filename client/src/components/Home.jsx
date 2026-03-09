@@ -3,7 +3,7 @@ import {Sparkles, Leaf, BarChart3} from "lucide-react"
 import axios from "axios"
 
 /*
-const defultData = {
+const defaultData = {
     
     "success": true,
     "product": {
@@ -56,13 +56,13 @@ const Home = () => {
             e.preventDefault()
             try{
                 setIsLoading(true)
-                const URL = "http://localhost:5000/api/category"
+                const URL = import.meta.env.VITE_SERVER_URL || "http://localhost:5000"
                 const userInput = {
                     product_name:productName.trim(),
                     description:productDescription.trim()
                 } 
 
-                const response = await axios.post(URL,userInput)
+                const response = await axios.post(`${URL}/api/category`,userInput)
                 const data = response.data.product 
                 setProductData(data) 
                 setIsError(false)
@@ -85,14 +85,15 @@ const Home = () => {
         const generateProductImpactReport = async (productId) => {
             try{
                 setIsLoadingImpact(true)
-                const URL = "http://localhost:5000/api/impact"
+                const URL = import.meta.env.VITE_SERVER_URL || "http://localhost:5000"
+
                 const userInput = {
                     productId: productId,
                     quantity: Number(productsQuantity) < 1 ? 1 : Number(productsQuantity)
                 }
                 console.log("userInput",userInput)
 
-                const response = await axios.post(URL,userInput)
+                const response = await axios.post(`${URL}/api/impact`,userInput)
                 const data = response.data.impact 
                setProductImpactData(data)
                 setIsImpactError(false)
@@ -170,10 +171,10 @@ const renderProductCardsData = () => {
                 <p className="text-xs md:text-sm text-slate-400 mt-1">Enter the product quantity below to generate its environmental impact insights.</p>
                 <div className="w-full flex flex-col md:flex-row justify-start items-start md:items-center mt-6 flex-wrap gap-2">
                     <input id="quantity" type="number" value={Number(productsQuantity)} required min={1} max={1000000} onChange={(e) => setProductsQuantity(Number(e.target.value))} placeholder="Enter quantity ex:10"
-                    className="w-full md:w-56 h-10 md:h-12 px-4 py-2 text-sm md:text-base text-slate-600 font-medium bg-slate-100 rounded-md outline-none mr-5 md:mr-10"/>
+                    className="w-full md:w-56 h-10 md:h-12 px-4 py-2 text-sm md:text-base text-slate-600 font-medium bg-slate-50 border border-slate-500/80 rounded-md outline-none mr-5 md:mr-10"/>
 
                     <button type="button" onClick = {() => generateProductImpactReport(productData._id)}
-                    className="h-10 w-full md:h-12 px-4 py-2 text-white text-sm md:text-base text-shadow-gray-900 font-semibold bg-linear-to-r from-green-500/90 via-green-300 via-40% to-green-500/90
+                    className="h-10 w-full md:h-12 px-4 py-2 text-white text-sm md:text-base text-shadow-gray-900 font-semibold bg-linear-to-r from-green-500/90 via-green-300 via-60% to-green-500/90 
                     transition-all duration-400 rounded-md cursor-pointer hover:bg-green-400/80 hover:via-green-400 hover:shadow-lg hover:shadow-green-200">Generate Impact</button>
                 </div>
                 {/* Impact error */}
@@ -220,30 +221,25 @@ const renderProductImpactData = () => {
                     Try entering eco-friendly products such as bamboo toothbrush, reusable bottle, or cotton shopping bag.
                 </p>
 
-            {/* Quick Searches */}
-            <div className="flex justify-center items-center gap-3 mt-5 flex-wrap">
+                {/* Quick Searches */}
+                <div className="flex justify-center items-center gap-3 mt-5 flex-wrap">
 
-                    <button
-                        onClick={()=>setProductName("Bamboo Toothbrush")}
+                        <button type="button" onClick={()=>setProductName("Bamboo Toothbrush")}
                         className="px-3 py-1 text-xs bg-green-200 rounded-md">
-                    Bamboo Toothbrush
-                    </button>
+                        Bamboo Toothbrush
+                        </button>
 
-                    <button
-                        onClick={()=>setProductName("Reusable Water Bottle")}
+                        <button type="button" onClick={()=>setProductName("Reusable Water Bottle")}
                         className="px-3 py-1 text-xs bg-green-200 rounded-md">
-                    Reusable Bottle
-                    </button>
+                        Reusable Bottle
+                        </button>
 
-                    <button
-                        onClick={()=>setProductName("Cotton Shopping Bag")}
+                        <button type="button" onClick={()=>setProductName("Cotton Shopping Bag")}
                         className="px-3 py-1 text-xs bg-green-200 rounded-md">
-                    Cotton Bag
-                    </button>
+                        Cotton Bag
+                        </button>
 
-            </div>
-
-
+                </div>
 
                 <form onSubmit={handleFormSubmitGenerateCategory} id="category-form" className="w-full md:w-[65%] p-5  rounded-md mt-1">
                     {/* Product Name */}
