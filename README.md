@@ -1,314 +1,279 @@
-# Rayeva – AI Product Categorization System >>>>>>>>>>>>>>>>>>
+# 🌱 AI Sustainable Product Assistant
 
-## Project Overview
+An AI-powered system that helps businesses categorize eco-friendly products and estimate their environmental impact.
 
-This project implements an **AI-powered product categorization system** for sustainable commerce.
+This project implements **AI modules for sustainable commerce** by automatically generating product categories, SEO tags, sustainability filters, and environmental impact reports.
 
-The system automatically analyzes a product’s **name and description** and uses an AI model to generate:
-
-* Product Category
-* Sub Category
-* SEO Tags
-* Sustainability Filters
-
-The generated data is stored in a **MongoDB database**, and every AI interaction (prompt and response) is logged for monitoring and debugging.
-
-This project demonstrates **AI integration with real backend logic**.
+Live Demo: https://eco-sustainable-ai.vercel.app/
 
 ---
 
-# Key Features
+# 📌 Project Overview
 
-## 1. AI Auto Category Generator
+The goal of this system is to reduce manual catalog management and support sustainable product insights using AI.
 
-The system automatically generates structured product data using AI.
+Users can:
 
-Input:
+• Generate product categories automatically using AI
+• Get SEO tags and sustainability filters for eco-friendly products
+• Estimate environmental impact based on product quantity
+• View results through a simple interactive UI
 
-* product_name
-* description
-
-AI generates:
-
-* category
-* sub_category
-* seo_tags (5–10)
-* sustainability_filters
-
-Example AI Output:
-
-```json
-{
- "category": "Accessories",
- "sub_category": "Reusable Shopping Bags",
- "seo_tags": ["eco-friendly bag", "reusable bag"],
- "sustainability_filters": ["Reusable", "Organic Cotton"]
-}
-```
+The system demonstrates **AI integration with real business logic and structured outputs.**
 
 ---
 
-## 2. AI Prompt Logging
+# ⚙️ Implemented Modules
 
-Every AI request is logged to track:
+## ✅ Module 1 – AI Auto Category & Tag Generator
 
-* Prompt sent to the AI
-* AI response
-* Product reference
+Automatically categorizes sustainable products and generates structured metadata.
 
-This helps with:
+Features:
 
-* debugging
-* monitoring AI behavior
-* improving prompt design
+• Detects product category
+• Suggests sub-category
+• Generates SEO tags
+• Suggests sustainability filters
+• Stores product in database
+• Logs AI prompt and response
 
-Database design:
-
-Product
-⬆
-AiLog (linked using productId)
-
----
-
-# System Architecture
-
-User Request
-↓
-API Endpoint
-↓
-Controller
-↓
-AI Service (Groq API)
-↓
-Parse AI Response
-↓
-Save Product
-↓
-Save AI Log
-↓
-Return Response
-
----
-
-# Tech Stack
-
-Backend:
-
-* Node.js
-* Express.js
-
-Database:
-
-* MongoDB
-* Mongoose
-
-AI Integration:
-
-* Groq API (LLM)
-
-Other Tools:
-
-* Axios
-* dotenv
-
----
-
-# Project Structure
+Example Input
 
 ```
-src
-│
-├── controllers
-│   ├── categoryController.js
-│   ├── productsController.js
-│   └── aiLogsController.js
-│
-├── models
-│   ├── Product.js
-│   └── AiLog.js
-│
-├── routes
-│   ├── categoryRoutes.js
-│   ├── productRoutes.js
-│   └── aiLogRoutes.js
-│
-├── services
-│   └── aiServices.js
-│
-├── utils
-│   ├── categoryPrompt.js
-│   └── AppError.js
-│
-└── config
-    └── connectDB.js
-```
-
----
-
-# API Endpoints
-
-### Create Product (AI Categorization)
-
-POST /api/products
-
-Example Request
-
-```json
 {
  "product_name": "Reusable Cotton Shopping Bag",
  "description": "Durable eco-friendly cloth bag used instead of plastic bags"
 }
 ```
 
+Example Output
+
+```
+{
+ "category": "Accessories",
+ "sub_category": "Reusable Shopping Bags",
+ "seo_tags": [
+   "reusable bag",
+   "cotton shopping bag",
+   "eco-friendly bag"
+ ],
+ "sustainability_filters": [
+   "Reusable",
+   "Organic Cotton",
+   "Plastic Free"
+ ]
+}
+```
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+## ✅ Module 3 – Impact Reporting Generator
+
+Calculates environmental impact of sustainable products.
+
+Features:
+
+• Estimates plastic saved
+• Estimates carbon emissions avoided
+• Generates impact statement
+• Uses product category and quantity
+
+Example Request
+
+```
+{
+ "productId": "xxxxx",
+ "quantity": 20
+}
+```
+
 Example Response
 
-```json
+```
 {
- "success": true,
- "product": {
-  "category": "Accessories",
-  "sub_category": "Reusable Shopping Bags"
- }
+ "plastic_saved": "8.80 kg",
+ "carbon_avoided": "7.20 kg",
+ "impact_statement":
+ "This order prevented 8.80 kg of plastic waste and reduced 7.20 kg of carbon emissions."
 }
 ```
 
 ---
 
-### Get All Products
+# 🧠 System Architecture
 
-GET /api/products
-
-Returns all stored products along with AI logs.
-
----
-
-### Delete Product
-
-DELETE /api/products/:id
-
-Removes a product from the database.
-
----
-
-### Get All AI Logs
-
-GET /api/ailogs
-
-Returns all AI prompt and response logs.
-
----
-
-### Get AI Log by ID
-
-GET /api/ailogs/:id
-
-Returns a specific AI interaction.
-
----
-
-### Delete AI Log
-
-DELETE /api/ailogs/:id
-
-Deletes a specific AI log.
-
----
-
-# AI Prompt Design
-
-The AI is guided using a structured prompt:
-
-* Product name and description are provided
-* AI must select category from predefined options
-* AI returns structured JSON only
-
-Example Prompt:
+User Interaction Flow
 
 ```
-You are an AI product categorization system.
+User
+ ↓
+React Frontend
+ ↓
+Express API
+ ↓
+AI Service (Groq / LLM)
+ ↓
+MongoDB Database
+ ↓
+Structured Response
+```
 
-Product Name: Reusable Cotton Shopping Bag
-Description: Durable eco-friendly cloth bag used instead of plastic bags
+Impact Calculation Flow
 
-Choose category only from:
-Kitchen
-Personal Care
-Home Essentials
-Accessories
+```
+User enters quantity
+ ↓
+Impact API
+ ↓
+Impact Service
+ ↓
+Environmental Impact Report
 ```
 
 ---
 
-# Error Handling
+# 🛠 Tech Stack
 
-The system includes:
+Frontend
 
-* Input validation
-* AI response validation
-* ObjectId validation
-* Custom error handling using AppError
+• React
+• TailwindCSS
+• Axios
 
----
+Backend
 
-# Database Models
+• Node.js
+• Express.js
 
-## Product Model
+Database
 
-Stores final product information:
+• MongoDB
+• Mongoose
 
-* product_name
-* description
-* category
-* sub_category
-* seo_tags
-* sustainability_filters
+AI Integration
 
----
+• Groq API (OpenAI-compatible LLM)
 
-## AiLog Model
+Deployment
 
-Stores AI interaction logs:
-
-* productId
-* prompt
-* response
-* timestamps
+• Vercel (Frontend)
+• Node backend server
 
 ---
 
-# Why AI Logging is Important
+# 📡 API Endpoints
 
-AI systems can sometimes produce unexpected outputs.
+Generate Category
 
-Logging helps developers:
+```
+POST /api/category
+```
 
-* analyze prompts
-* debug AI behavior
-* improve prompt quality
+Generate Impact Report
+
+```
+POST /api/impact
+```
+
+Example Request
+
+```
+{
+ "product_name": "Bamboo Toothbrush",
+ "description": "Biodegradable bamboo toothbrush replacing plastic toothbrushes"
+}
+```
 
 ---
 
-# Future Improvements
+# 📊 Database Collections
+
+Products
+
+Stores generated product information.
+
+Fields
+
+```
+product_name
+description
+category
+sub_category
+seo_tags
+sustainability_filters
+createdAt
+```
+
+AI Logs
+
+Stores prompt and response from AI model.
+
+Fields
+
+```
+prompt
+response
+createdAt
+```
+
+---
+
+# 🎨 Frontend Features
+
+• Responsive UI
+• Product result cards
+• SEO tag badges
+• Sustainability filters display
+• Environmental impact cards
+• Loading and error states
+
+---
+
+# 🧪 Example Products to Try
+
+You can test the system with these examples:
+
+• Bamboo toothbrush
+• Reusable cotton shopping bag
+• Stainless steel water bottle
+• Compostable food container
+• Eco-friendly cleaning product
+
+---
+
+# 🔮 Future Improvements
+
+The assignment also proposes additional modules which could be implemented in the future:
+
+Module 2 – AI B2B Proposal Generator
+Module 4 – AI WhatsApp Support Bot
 
 Possible enhancements:
 
-* Impact Reporting Module
-* AI B2B Proposal Generator
-* WhatsApp Support Bot
-* AI response validation layer
-* Product duplicate detection
+• AI product recommendations
+• Sustainability analytics dashboard
+• WhatsApp customer support automation
+• Impact reporting per order
 
 ---
 
-# Conclusion
+# 🎥 Demo Video
 
-This project demonstrates how AI can be integrated into a backend system to automate product categorization and reduce manual catalog work.
+(Place your demo video link here)
 
-It combines:
+Example
 
-* AI processing
-* backend architecture
-* database design
-* logging and monitoring
+```
+https://your-demo-video-link
+```
 
-to build a production-style AI service.
+---
+
+# 👨‍💻 Author
+
+Raju Badanakanti
+
+AI Systems Assignment – Sustainable Commerce
+
+---
